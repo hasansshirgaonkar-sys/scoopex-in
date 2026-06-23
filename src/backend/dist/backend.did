@@ -1,0 +1,320 @@
+type http_request_result = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type http_header = 
+ record {
+   name: text;
+   value: text;
+ };
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type WeightRange = 
+ record {
+   maxWeight: float64;
+   minWeight: float64;
+   rangeLabel: text;
+   unit: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = 
+ record {
+   contactInfo: text;
+   name: text;
+   userType: variant {
+               customer;
+               serviceProvider;
+             };
+ };
+type TransformationOutput = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type TransformationInput = 
+ record {
+   context: blob;
+   response: http_request_result;
+ };
+type Time = int;
+type StripeSessionStatus = 
+ variant {
+   completed: record {
+                response: text;
+                userPrincipal: opt text;
+              };
+   failed: record {error: text;};
+ };
+type StripeConfiguration = 
+ record {
+   allowedCountries: vec text;
+   secretKey: text;
+ };
+type ShoppingItem = 
+ record {
+   currency: text;
+   priceInCents: nat;
+   productDescription: text;
+   productName: text;
+   quantity: nat;
+ };
+type ServiceProviderProfile = 
+ record {
+   availability: bool;
+   contactInfo: text;
+   id: Principal;
+   name: text;
+   servicesOffered: vec DeliveryType;
+ };
+type Result = 
+ variant {
+   err: Error;
+   ok;
+ };
+type RazorpayOrder = 
+ record {
+   amount: int;
+   bookingId: text;
+   currency: text;
+   notes: text;
+   orderId: text;
+   receipt: text;
+ };
+type Quote = 
+ record {
+   advanceAmount: int;
+   advancePercentage: int;
+   customer: Principal;
+   deliveryType: DeliveryType;
+   distance: int;
+   dropOffLocation: Location;
+   estimatedPrice: int;
+   id: text;
+   pickupLocation: Location;
+   timestamp: Time;
+   weightRange: WeightRange;
+ };
+type Principal = principal;
+type PriceBreakdown = 
+ record {
+   addOns: int;
+   baseFare: int;
+   bulkDiscount: int;
+   distance: int;
+   finalPrice: int;
+   goodsType: int;
+   timeSlot: int;
+   vehicleType: int;
+ };
+type PaymentStatus = 
+ variant {
+   cancelled;
+   completed;
+   confirmed;
+   driverAssigned;
+   pendingPayment;
+ };
+type MoveType = 
+ variant {
+   bhk: record {size: text;};
+   office;
+   rk;
+ };
+type Location = 
+ record {
+   address: text;
+   latitude: float64;
+   longitude: float64;
+ };
+type InstantQuoteRequest = 
+ record {
+   addOnServices: vec text;
+   advanceAmount: int;
+   advancePercentage: int;
+   dropOffLocation: text;
+   moveType: MoveType;
+   pickupLocation: text;
+   priceBreakdown: PriceBreakdown;
+   schedule: text;
+   totalPrice: int;
+   vehicleType: text;
+ };
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type DeliveryType = 
+ variant {
+   appliance;
+   furniture;
+   largePackage;
+   mediumPackage;
+   smallPackage;
+ };
+type BookingStatus = 
+ variant {
+   cancelled;
+   completed;
+   confirmed;
+   inProgress;
+   pending;
+   pendingPayment;
+ };
+type Booking = 
+ record {
+   advanceAmount: int;
+   advancePercentage: int;
+   customer: Principal;
+   finalPrice: int;
+   id: text;
+   paymentId: text;
+   paymentStatus: PaymentStatus;
+   quoteId: text;
+   serviceProvider: Principal;
+   status: BookingStatus;
+   timestamp: Time;
+ };
+service : {
+  __accessControlState: () -> (reserved) query;
+  __bookings: (ko: opt text, count: opt nat) ->
+   (vec record {
+          text;
+          Booking;
+        }) query;
+  __instantQuoteOwners: (ko: opt text, count: opt nat) ->
+   (vec record {
+          text;
+          Principal;
+        }) query;
+  __instantQuotes: (ko: opt text, count: opt nat) ->
+   (vec record {
+          text;
+          InstantQuoteRequest;
+        }) query;
+  __quotes: (ko: opt text, count: opt nat) ->
+   (vec record {
+          text;
+          Quote;
+        }) query;
+  __razorpayOrders: (ko: opt text, count: opt nat) ->
+   (vec record {
+          text;
+          RazorpayOrder;
+        }) query;
+  __serviceProviderProfiles: (ko: opt Principal, count: opt nat) ->
+   (vec record {
+          Principal;
+          ServiceProviderProfile;
+        }) query;
+  __stripeConfiguration: () -> (opt StripeConfiguration) query;
+  __userProfiles: (ko: opt Principal, count: opt nat) ->
+   (vec record {
+          Principal;
+          UserProfile;
+        }) query;
+  __weightRanges: (ko: opt text, count: opt nat) ->
+   (vec record {
+          text;
+          WeightRange;
+        }) query;
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result);
+  _internet_identity_sign_in_start: () -> (blob);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  autoCancelPendingBookings: () -> (vec text);
+  createBooking: (quoteId: text, serviceProvider: Principal) -> (Booking);
+  createCheckoutSession: (items: vec ShoppingItem, successUrl: text,
+   cancelUrl: text) -> (text);
+  createInstantQuoteRequest: (pickupLocation: text, dropOffLocation: 
+   text, moveType: MoveType, vehicleType: text, addOnServices: vec text,
+   schedule: text, advancePercentage: int) -> (InstantQuoteRequest);
+  createRazorpayOrder: (bookingId: text) -> (RazorpayOrder);
+  createServiceProviderProfile: (profile: ServiceProviderProfile) -> ();
+  createWeightRange: (rangeLabel: text, minWeight: float64, maxWeight:
+   float64, unit: text) -> ();
+  generateBalancePaymentLink: (bookingId: text) -> (text);
+  geocodeAddress: (address: text) -> (text);
+  getAllDeliveryTypes: () -> (vec DeliveryType) query;
+  getAllInstantQuoteRequests: () -> (vec InstantQuoteRequest) query;
+  getAllWeightRanges: () -> (vec WeightRange) query;
+  getBookingById: (bookingId: text) -> (Booking) query;
+  getBookingsByCustomer: (customer: Principal) -> (vec Booking) query;
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getMyBookings: () -> (vec Booking) query;
+  getMyInstantQuoteRequests: () -> (vec InstantQuoteRequest) query;
+  getMyQuotes: () -> (vec Quote) query;
+  getQuote: (pickup: Location, dropOff: Location, deliveryType: DeliveryType,
+   weightRange: WeightRange, advancePercentage: int) -> (Quote);
+  getQuotesByDeliveryType: (deliveryType: DeliveryType) -> (vec Quote) query;
+  getQuotesByDeliveryTypeAndWeightRange: (deliveryType: DeliveryType,
+   weightRangeLabel: text) -> (vec Quote) query;
+  getQuotesByWeightRange: (weightRangeLabel: text) -> (vec Quote) query;
+  getRouteDistance: (startLat: float64, startLng: float64, endLat: float64,
+   endLng: float64) -> (int);
+  getServiceProviderProfile: (providerId: Principal) ->
+   (opt ServiceProviderProfile) query;
+  getServiceProviderProfiles: () -> (vec ServiceProviderProfile) query;
+  getStripeSessionStatus: (sessionId: text) -> (StripeSessionStatus);
+  getUserProfile: (user: Principal) -> (opt UserProfile) query;
+  getWeightRange: (rangeLabel: text) -> (opt WeightRange) query;
+  initializeAccessControl: () -> ();
+  isCallerAdmin: () -> (bool) query;
+  isStripeConfigured: () -> (bool) query;
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  setStripeConfiguration: (config: StripeConfiguration) -> ();
+  transform: (input: TransformationInput) -> (TransformationOutput) query;
+  updateBookingPayment: (bookingId: text, paymentId: text, newPaymentStatus:
+   PaymentStatus) -> ();
+  updateBookingStatus: (bookingId: text, newStatus: BookingStatus) -> ();
+  updatePaymentStatus: (bookingId: text, newStatus: PaymentStatus) -> ();
+  updateServiceProviderProfile: (profile: ServiceProviderProfile) -> ();
+  verifyRazorpayPayment: (bookingId: text, paymentId: text, orderId: 
+   text, signature: text) -> (bool);
+}
