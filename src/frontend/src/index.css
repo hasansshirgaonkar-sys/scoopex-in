@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+
+    /* SCOOPEX Blue Gradient Theme - Light Mode */
+    --background: 0.99 0 0;
+    --foreground: 0.2 0.08 250;
+
+    --card: 1 0 0;
+    --card-foreground: 0.2 0.08 250;
+
+    --popover: 1 0 0;
+    --popover-foreground: 0.2 0.08 250;
+
+    /* Primary: Deep Blue (#003D91) */
+    --primary: 0.35 0.15 250;
+    --primary-foreground: 0.99 0 0;
+
+    /* Secondary: Medium Blue (#0094E0) */
+    --secondary: 0.55 0.18 235;
+    --secondary-foreground: 0.99 0 0;
+
+    /* Accent: Light Cyan (#66CCFF) */
+    --accent: 0.78 0.14 220;
+    --accent-foreground: 0.2 0.08 250;
+
+    --muted: 0.96 0.01 235;
+    --muted-foreground: 0.45 0.06 250;
+
+    --destructive: 0.55 0.24 25;
+    --destructive-foreground: 0.99 0 0;
+
+    --border: 0.88 0.02 235;
+    --input: 0.88 0.02 235;
+    --ring: 0.55 0.18 235;
+
+    --chart-1: 0.35 0.15 250;
+    --chart-2: 0.55 0.18 235;
+    --chart-3: 0.78 0.14 220;
+    --chart-4: 0.45 0.16 240;
+    --chart-5: 0.65 0.16 230;
+
+    --sidebar: 0.98 0 0;
+    --sidebar-foreground: 0.2 0.08 250;
+    --sidebar-primary: 0.35 0.15 250;
+    --sidebar-primary-foreground: 0.99 0 0;
+    --sidebar-accent: 0.96 0.01 235;
+    --sidebar-accent-foreground: 0.2 0.08 250;
+    --sidebar-border: 0.88 0.02 235;
+    --sidebar-ring: 0.55 0.18 235;
+  }
+
+  .dark {
+    /* SCOOPEX Blue Gradient Theme - Dark Mode */
+    --background: 0.12 0.06 250;
+    --foreground: 0.96 0.01 235;
+
+    --card: 0.18 0.06 250;
+    --card-foreground: 0.96 0.01 235;
+
+    --popover: 0.15 0.06 250;
+    --popover-foreground: 0.96 0.01 235;
+
+    /* Primary: Bright Blue (#0094E0) */
+    --primary: 0.6 0.2 235;
+    --primary-foreground: 0.99 0 0;
+
+    /* Secondary: Light Cyan (#66CCFF) */
+    --secondary: 0.8 0.16 220;
+    --secondary-foreground: 0.12 0.06 250;
+
+    /* Accent: Medium Blue */
+    --accent: 0.45 0.16 240;
+    --accent-foreground: 0.96 0.01 235;
+
+    --muted: 0.22 0.04 250;
+    --muted-foreground: 0.65 0.04 235;
+
+    --destructive: 0.6 0.26 25;
+    --destructive-foreground: 0.99 0 0;
+
+    --border: 0.28 0.04 250;
+    --input: 0.28 0.04 250;
+    --ring: 0.6 0.2 235;
+
+    --chart-1: 0.6 0.2 235;
+    --chart-2: 0.8 0.16 220;
+    --chart-3: 0.45 0.16 240;
+    --chart-4: 0.7 0.18 230;
+    --chart-5: 0.55 0.18 245;
+
+    --sidebar: 0.15 0.06 250;
+    --sidebar-foreground: 0.96 0.01 235;
+    --sidebar-primary: 0.6 0.2 235;
+    --sidebar-primary-foreground: 0.99 0 0;
+    --sidebar-accent: 0.22 0.04 250;
+    --sidebar-accent-foreground: 0.96 0.01 235;
+    --sidebar-border: 0.28 0.04 250;
+    --sidebar-ring: 0.6 0.2 235;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .bg-grid-pattern {
+    background-image: linear-gradient(
+        to right,
+        oklch(var(--border)) 1px,
+        transparent 1px
+      ), linear-gradient(to bottom, oklch(var(--border)) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .gradient-blue-wave {
+    background: linear-gradient(
+      135deg,
+      oklch(var(--primary)) 0%,
+      oklch(var(--secondary)) 50%,
+      oklch(var(--accent)) 100%
+    );
+  }
+
+  .gradient-blue-subtle {
+    background: linear-gradient(
+      135deg,
+      oklch(var(--primary)) 0%,
+      oklch(var(--secondary)) 100%
+    );
+  }
+}
